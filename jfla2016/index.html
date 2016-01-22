@@ -1,0 +1,699 @@
+
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Pendulum</title>
+
+		<meta name="description" content="Une extension réactive pour la programmation Web en OCaml">
+		<meta name="author" content="Rémy El Sibaïe">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+
+    <!-- <script src="node_modules/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local"></script> -->
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<!--
+horloge globale
+pas a faible ressources
+et calcule instantané et projection sur modèle temps reel ensuite
+reaction instantanné
+
+jsoo from ocsigen
+effects (ocaml)
+
+mettre les types dans l'exemple ocaml
+modules et objets
+ajouter les dernières fonctionnalités
+ajouter un objet dans l'exemple ? pourquoi ## ?
+bindings js_of_ocaml + accès au dom ?
+
+
+ajouter l'info que c'est D(p) et S(p)
+-->
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  messageStyle: "none",
+  tex2jax: {preview: "none"}
+});
+</script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+        <section>
+          <h1>Pendulum</h1>
+          <h3>A reactive extension for OCaml Web programming</h3>
+          <p>
+            <small><a>Rémy El Sibaïe, Emmanuel Chailloux</a></small>
+          </p>
+        </section>
+
+        <section>
+          <h2>Web is magic</h2>
+          Contents and APIs in a few lines of code
+          <p>&nbsp;</p>
+          <hr>
+
+					<pre><code class="hljs" data-trim contenteditable>
+function jsonFlickrFeed(o) {
+  var i = 0;
+  while(i<10) {
+    document.write(
+      '<img height="80px" width="80px" src="'
+      + o.items[i].media.m + '">');
+    i++;
+  }
+}
+<script src="http://api.flickr.com/..." type="text/javascript">
+</script> 
+					</code></pre>
+          <div>
+          <script type="text/javascript">
+            function jsonFlickrFeed(o) {
+            var i = 0;
+            while(i<10) {
+                       document.write(
+                       '<img style="border:none" height="80px" width="80px" src="' + o.items[i].media.m + '" alt="' + o.items[i].title +'">');
+                       i++;
+                       }
+                       }
+          </script>
+          <script
+             src="http://api.flickr.com/services/feeds/photos_public.gne?id=48404998@N08&lang=en-us&format=json"
+                  type="text/javascript"></script>
+          </div>
+        </section>
+
+        
+        <section>
+          <h2>Web is magic</h2>
+          Only one standard, <a style="color:deepskyblue">Javascript</a>
+          <br>
+          thousands of libraries
+          <hr>
+
+          <table>
+            <tbody>
+              <tr>
+                <td><a style="color:deepskyblue" >angular-js</a></td>
+                <td><a style="color:deepskyblue" >react</a></td>
+                <td><a style="color:deepskyblue" >moment</a></td>
+              </tr>
+              <tr>
+                <td><a style="color:deepskyblue" >meteor</a></td>
+                <td><a style="color:deepskyblue" >foundation</a></td>
+                <td><a style="color:deepskyblue" >jquery</a></td>
+              </tr>
+              <tr>
+                <td><a style="color:deepskyblue" >ember-js</a></td>
+                <td><a style="color:deepskyblue" >backbone</a></td>
+                <td><a style="color:deepskyblue" >d3</a></td>
+              </tr>
+              <tr>
+                <td><a style="color:deepskyblue" >video.js</a></td>
+                <td><a style="color:deepskyblue" >chart.js</a></td>
+                <td><a style="color:deepskyblue" >redux</a></td>
+              </tr>
+              <tr>
+                <td><a style="color:deepskyblue" >reveal.js</a></td>
+                <td><a style="color:deepskyblue" >less.js</a></td>
+                <td><a style="color:deepskyblue" >socket.io</a></td>
+            </tbody>
+					</table>
+          ...
+        </section>
+
+        <section>
+          <h2>The runtime in a nutshell</h2>
+
+          <hr>
+
+            <p>An <a style="color:tomato">internal hidden loop</a></p>
+            <p class="fragment">An event queue <a style="color:tomato">sequentially</a> processed</p>
+            <p class="fragment">API for UI: the <a style="color:deepskyblue">DOM</a></p>
+          <p class="fragment">Automatic refresh of the UI</p>
+
+        </section>
+
+        <section>
+          <h2>A lot of interactions</h2>
+
+          <p>&nbsp;</p>
+
+            <div style="position: absolute; 
+                          z-index: 100; top : 55%; left : 10%;">
+              <img width="800" src="dessin.svg" style="border:none; background : rgba(0, 0, 0, 0);" />
+            </div>
+
+
+            <div style="position: absolute; left : 15%">
+              <iframe
+                 width="640" height="390" src="//www.youtube.com/embed/JkK8g6FMEXE"
+                 frameborder="0"></iframe>
+            </div>
+
+        </section>
+        
+        <section>
+          <h2>But...</h2>
+          There's only one way to express concurrency
+          <hr>
+          The <code>callback</code>
+<pre><code>
+function initElement()
+{
+  var p = document.getElementById("foo");
+  p.onclick = function () {
+    alert("Click event detected");
+  };
+}
+</code></pre>
+
+<ul>
+  <li>Hard to express dependencies between <a style="color:tomato">events</a> and <a style="color:tomato">displays</a></li>
+  <li>Impossible to check them</li>
+</ul>
+        </section>
+
+        <section>
+          <section>
+            <h2>Our solution: <a style="color:deepskyblue">Reactive-synchronous programming</a></h2>
+          </section>
+          <section>
+            <h3>Reactive-synchronous programming</h2>
+            <p align="left">Designed to <a style="color:deepskyblue">check and
+            generate</a> wiring design for embeded systems
+              </p>
+            <hr>
+            <p align="left">The program interacts <a style="color:deepskyblue">continuously</a> with its environnement</p> 
+          </section>
+          <section>
+            <h3>Reactive-synchronous programming</h2>
+            Well-known examples: <a>Esterel</a>, <a>Lustre</a>, <a>ReactiveC</a>, ...
+            <hr>
+            <p align="left">Several notions: </p>
+            <ul>
+              <li>Time is discret and seen as <a style="color:deepskyblue">instants</a>
+                with a global clock</li>
+              <li class="fragment">High level <a style="color:deepskyblue">
+                  concurrency</a> (deterministic)</li>
+              <li class="fragment">Dependency between the concurrent tasks
+              according to their <a style="color:deepskyblue">instantaneous communications</a></li>
+            </ul>
+            <p class="fragment" align="left">Synchronous
+              hypothesis \(\Rightarrow\) Causality analysis</p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Pendulum</h2>
+            Reactive extension for Web programming in OCaml
+            <hr>
+            <p align="left">Why ?</p>
+            <ul>
+              <li>Combine <a style="color:deepskyblue">causality analysis</a>
+                and <a style="color:deepskyblue">type checking</a>
+                for more safety and expressivity</li>
+              <li>Benefit of <code>js_of_ocaml</code> (OCsigen) environnement</li>
+            </ul>
+            <hr>
+
+            <p align="left">
+              <a style="color:tomato">Objective</a>:
+              Propose a usable (and useful) language for OCaml programmers
+            </p>
+          </section>
+
+          <section>
+            <h3>OCaml</h3>
+            <hr>
+            <ul>
+              <li>Fonctionnal programming language with side effects (ML family)</li>
+              <li>Strict and static type checking with inference</li>
+              <li>Imperative features (refs, arrays, loops)</li>
+              <li>Rich datatype definitions and module system</li>
+              <li>Constantly evolving: first class modules, GADTs, ...</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>OCaml</h3>
+<pre><code>
+type tree = Leaf of int | Node of tree * tree
+
+(* val exists_leaf : (int -> bool) -> tree -> bool *)
+let rec exists_leaf p tree = match tree with
+  | Leaf v -> p v
+  | Node (left, right) ->
+      exists_leaf p left
+      || exists_leaf p right
+
+(* val has_even_leaf : tree -> bool *)
+let has_even_leaf tree =
+  exists_leaf (fun n -> n mod 2 = 0) tree
+</pre></code>
+          </section>
+
+          <section>
+            <h3>Compiling to Javascript</h3>
+            Thanks to <code>js_of_ocaml</code>, compiling from OCaml bytecode to JS
+            <hr>
+<pre><code class="ocaml" data-trim data-noescape>
+let initElement () =
+  let p = Dom_html.document##getElementById "foo";
+  p<a style="color: deepskyblue">##.</a>onclick := (fun () ->
+    alert("Click event detected")
+  );
+</pre></code>
+          </section>
+        </section>
+
+
+        <section>
+          <h2>Pendulum's language</h2>
+          Corresponding to Esterel's statements core
+          <div>
+          <pre>
+<a style="color: deepskyblue">prog</a> ::= <a style="color: deepskyblue">inout_decls</a> <a style="color: deepskyblue">stmt</a>
+<a style="color: deepskyblue">stmt</a> ::=
+  | nothing
+  | pause
+  | emit <a style="color: deepskyblue">s</a> <a style="color:tomato">ocaml</a>
+  | present <a style="color: deepskyblue">test_expr</a> <a style="color: deepskyblue">stmt</a> <a style="color: deepskyblue">stmt</a>
+  | loop <a style="color: deepskyblue">stmt</a>
+  | <a style="color: deepskyblue">stmt</a> || <a style="color: deepskyblue">stmt</a>
+  | <a style="color: deepskyblue">stmt</a> ; <a style="color: deepskyblue">stmt</a>
+  | let <a style="color: deepskyblue">s</a> = <a style="color:tomato">ocaml</a> in <a style="color: deepskyblue">stmt</a>
+  | trap <a style="color: deepskyblue">label</a> <a style="color: deepskyblue">stmt</a>
+  | exit <a style="color: deepskyblue">label</a>
+  | suspend <a style="color: deepskyblue">test_expr</a> <a style="color: deepskyblue">stmt</a>
+  | !<a style="color:tomato">ocaml</a>
+          </pre>
+          </div>
+<div style="width: 100%; overflow: hidden;">
+  <div style="width: 420px; float: left;">
+
+          <pre>
+<a style="color: deepskyblue">inout_decls</a> ::=
+  | input <a style="color: deepskyblue">s</a> ; 
+  | input <a style="color: deepskyblue">s</a> ; inout_decls
+          </pre>
+  </div>
+  <div style="margin-left: 400px;">
+
+          <pre>
+<a style="color: deepskyblue">test_expr</a> ::=
+  | <a style="color: deepskyblue">s</a> [& <a style="color:tomato">ocaml</a>]
+  | <a style="color: deepskyblue">s</a>##<a style="color: deepskyblue">event</a> [& <a style="color:tomato">ocaml</a>]
+
+!! : get signals values from OCaml
+          </pre>
+
+
+  </div>
+</div>
+        </section>
+
+        <section>
+          <section>
+          <h2>Mouse loc example</h2>
+
+<pre><code class="ocaml" data-trim data-noescape>let update_field tarea ev =
+  tarea##.textContent := Js.some (Js.string
+    (Format.sprintf "%dx%d" (ev##.clientX) (ev##.clientY)))
+
+let%sync mouse =
+  <a style="color:deepskyblue">input</a> tarea;
+  <a stype="color: deepskyblue">input</a> window;
+  <a stype="color: deepskyblue">loop</a> (
+    <a stype="color: deepskyblue">present</a> window##onmousemove <a style="color: deepskyblue">!</a>(
+      match !!(window##onmousemove) with
+      | None -> ()
+      | Some ev -> update_field !!tarea ev
+    );
+    <a stype="color: deepskyblue">pause</a>
+  )
+</pre></code>
+
+          </section>
+          <section>
+          <h2>Mouse loc example</h2>
+
+
+<pre><code class="ocaml" data-trim data-noescape>open Dom_html
+let _ =
+  window##.onload := handler (fun _ ->
+      let tarea = CoerceTo.a "tarea" in
+      let set_tarea, react = mouse (tarea, window) in
+      Js._false
+    )
+</pre></code>
+
+<div>
+  <script type="text/javascript" src="./mouse.js" ></script>
+  <a style="color:white" id="tarea"></a>
+</div>
+
+          </section>
+        </section>
+
+
+
+        <section>
+          <h2>Programming interface</h2>
+
+<pre><code class="ocaml" data-trim data-noescape>let set_tarea, step = mouse_machine (tarea, window) in ...
+</pre></code>
+             <hr>
+             <p font-size="8">
+  $$\overbrace{t_0 ~*\dots*~ t_{n-1}}^{inputs~type} 
+  \rightarrow \\ \overbrace{(\tau_0
+  \rightarrow unit) ~*\dots*~ (\tau_{k-1} \rightarrow unit )}^{outputs~type} \rightarrow \\
+  \overbrace{((t_0 \rightarrow unit)~*\dots*~(t_{n-1} \rightarrow
+    unit))~*~(unit \rightarrow status)}^{setters~*~reaction} $$
+             </p>
+        </section>
+
+
+        <section>
+
+          <section>
+
+            <h3>Compilation</h3>
+            <a style="color:tomato">Esterel's GRC</a> : control-flow graph and
+            selection tree (uniquely indexed AST)
+            <hr>
+            <pre>
+              <a style="color: Deepskyblue">action</a> ::= <a style="color: deepskyblue">emit</a> signal
+              | <a style="color: deepskyblue">exit</a> int 
+              | <a style="color: deepskyblue">enter</a> int
+              | <a style="color: deepskyblue">local</a> signal
+              | <a style="color: deepskyblue">inst</a> (id, signal[,signal])
+              
+              test ::= sel int | present signal 
+              | sync (int, int) | finished
+              | ispaused id
+              
+              <a style="color: deepskyblue">node</a> ::= <a style="color: deepskyblue">call</a> (action, node)
+              | <a style="color: deepskyblue">branch</a> (test, node, node)
+              | <a style="color: deepskyblue">fork</a> (node, node)
+              | <a style="color: deepskyblue">finish</a> | <a style="color: deepskyblue">pause</a>
+            </pre>
+
+          </section>
+
+          <section>
+            <h3>Compilation</h3>
+
+            Surface(\(\mathcal{S}(p)\)) and Depth(\(\mathcal{D}(p)\))
+            <hr>
+
+            $$ \mathcal{S}(\mathtt{emit}~s)
+            \overset{\omega, \kappa, \Omega} \leadsto emit~s \blacktriangleright \omega $$
+            $$ \mathcal{D}(\mathtt{emit}~s) \overset{\omega, \kappa, \Omega}\leadsto \omega $$
+
+            <p>&nbsp;</p>
+
+            $$ \mathcal{S}(\mathtt{pause}) \overset{\omega, \kappa, \Omega} \leadsto
+            enter~p \blacktriangleright \kappa$$
+
+            $$ \mathcal{D}(\mathtt{pause}) \overset{\omega, \kappa, \Omega} \leadsto
+            exit~p \blacktriangleright \omega$$
+            
+          </section>
+          <section>
+
+
+            $$ \mathcal{S}(\mathtt{loop}~q) \overset{\kappa, \kappa, \Omega}
+            \leadsto enter~p \blacktriangleright \mathcal{S}(q)$$
+
+
+            $$ \mathcal{D}(\mathtt{loop}~q) \overset{\mathcal{S}(q), \kappa, \Omega}
+            \leadsto \mathcal{D}(q) $$
+
+            <p>&nbsp;</p>
+
+
+            $$ \mathcal{S}(\mathtt{present}~s~q~r)
+            \overset{exit~p\blacktriangleright\omega,\kappa, \Omega}
+            \leadsto enter~p \blacktriangleright
+            \mathtt{branch}~(signal~s, \mathcal{S}(q),\mathcal{S}(r))$$
+
+            $$ \mathcal{D}(\mathtt{present}~s~q~r)
+            \overset{exit~p\blacktriangleright\omega, \kappa, \Omega}
+            \leadsto \mathtt{branch}~(sel~q, \mathcal{D}(q), \mathcal{D}(r))$$
+
+
+
+          </section>
+        </section>
+
+
+        <section>
+<div style="width: 100%; overflow: hidden;">
+  <div style="width: 580px; float: left;">
+<pre><code class="ocaml" data-trim data-noescape>let%sync mouse =
+  <a style="color: deepskyblue">input</a> tarea;
+  <a style="color: deepskyblue">input</a> window;
+  <a style="color: deepskyblue">loop</a> (
+    <a stype="color: deepskyblue">present</a> window##onmousemove <a style="color: deepskyblue">!</a>(
+      match !!(window##onmousemove) with
+      | None -> ()
+      | Some ev ->
+          update_field !!tarea ev
+    );
+    <a style="color: deepskyblue">pause</a>)
+</pre></code>
+  </div>
+  <div style="margin-left: 550px;">
+    <h3>Compilation</h3>
+    <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a></p> 
+  </div>
+</div>
+<img style="background:none; border:none;" height="350" src="main_mouse_machine_tagged2.png"/>
+
+</section>
+
+        <section>
+          <div style="width: 100%; overflow: hidden;">
+            <div style="width: 500px; float: left;">
+              <img style="background:none; border:none;" height="700" src="main_mouse_machine_fg2.png"/>
+            </div>
+            <div style="margin-left: 500px;">
+              <h3>Compilation</h2>
+              <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a></p> 
+              <img position="asolute" style="background:none; border:none;" src="main_mouse_machine_tagged2.png"/>
+           </div>
+           </div>
+          </section>
+
+        <section style="margin: 0 auto">
+          <h2>Video application example</h2>
+          <a href="#/19">Jump to the end</a>
+
+          <div
+             position="relative" width="800px"
+             style="top:25%; left:25%; right:25%; margin: 0 auto">
+            <embed src="reactiveplayer.html"
+                   style="width:800px; height:650px;margin: 0 auto">
+          </div>
+
+        </section>
+
+        <section>
+    <h2>Naive code</h2>
+<pre><code class="ocaml" data-trim data-noescape>let%sync reactive_player =
+  <a style="color: deepskyblue">input</a> play_pause; (* the button *)
+  <a style="color: deepskyblue">input</a> progress_bar; (* the seeker element *)
+  <a style="color: deepskyblue">input</a> media; (* the video element *)
+  <a style="color: deepskyblue">input</a> time_a; (* the a elt displaying time*)
+  let no_update = () in
+  let state = Js.to_bool media##.paused in
+  <a style="color: deepskyblue">loop</a> (
+    <a style="color: deepskyblue">present</a> media##onplay
+      <a style="color: deepskyblue">!</a>(play_pause##.textContent :=
+        Js.some (Js.string "Pause"));
+    <a style="color: deepskyblue">pause</a>)
+
+</pre></code>
+
+        </section>
+        <section>
+    <h2>Naive code</h2>
+<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> play_pause##onclick (
+    <a style="color: deepskyblue">emit</a> state (not !!state));
+    <a style="color: deepskyblue">pause</a>)
+  || <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> state
+    <a style="color:deepbluesky">!</a>(update_state !!state media play_pause);
+    <a style="color: deepskyblue">pause</a>)
+
+  || <a style="color:deepbluesky">loop</a> (<a style="color:deepbluesky">present</a> progress_bar##onmouseup
+      <a style="color:deepbluesky">!</a>(update_media media progress_bar);
+    <a style="color:deepbluesky">pause</a>)
+
+  || <a style="color:deepbluesky">loop</a> (
+     <a style="color:deepbluesky">present</a> media##onprogress (
+      <a style="color:deepbluesky">!</a>(update_slider progress_bar media);
+      <a style="color:deepbluesky">!</a>(update_time_a media !!time_a)
+    ); <a style="color:deepbluesky">pause</a>)
+</pre></code>
+</section>
+
+<section>
+  <section style="margin: 0 auto">
+    <h2>Progress bar is wrong !</h2>
+
+    <div
+       position="relative" width="800px"
+       style="top:25%; left:25%; right:25%; margin: 0 auto">
+      <embed src="reactiveplayer_fail.html"
+             style="width:800px; height:650px;margin: 0 auto">
+    </div>
+  </section>
+</section>
+
+<section>
+    <h2>Fix the code</h2>
+<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color:deepbluesky">loop</a> (
+    <a style="color:deepbluesky">await</a> progress_bar##onmousedown;
+    <a style="color:deepbluesky">trap</a> t' (<a style="color:deepbluesky">loop</a>(
+        <a style="color:deepbluesky">emit</a> no_update ();
+        <a style="color:deepbluesky">present</a> progress_bar##onmouseup
+          (<a style="color:deepbluesky">!</a>(update_media media progress_bar); <a style="color:deepbluesky">exit</a> t');
+        <a style="color:deepbluesky">pause</a>)
+      ); <a style="color:deepbluesky">pause</a>)
+
+  || <a style="color:deepbluesky">loop</a> (
+    <a style="color:deepbluesky">present</a> media##onprogress (
+      <a style="color:deepbluesky">present</a> no_update <a style="color:deepbluesky">nothing</a> <a style="color:deepbluesky">!</a>(update_slider progress_bar media)
+      ||
+      <a style="color:deepbluesky">!</a>(update_time_a media (!!time_a))
+    ); <a style="color:deepbluesky">pause</a>)
+</pre></code>
+<a href="#/14">Result</a>
+
+</section>
+
+<section>
+    <h2>Related works and inspiration</h2>
+    <div>
+      <ul>
+        <li><a style="color:deepskyblue">ReactiveML</a>
+          <ul>
+            <li>Compiled with continuations with static typing</li>
+            <li>ReactiveC model (more constrained)</li>
+            <li>Dynamic scheduling</li>
+          </ul>
+        </li>
+        <li><a style="color:deepskyblue">Hop + HipHop(Esterel)</a> (HipHop.js ?)
+          <ul>
+            <li>Dynamic scheduling: interpretation and construction of the Esterel AST</li>
+            <li>Dynamic typing</li>
+          </ul>
+        </li>
+        <li><a style="color:deepskyblue">Eliom(OCsigen) + React</a> (OCaml)
+          <ul>
+            <li>Functional reactive programming</li>
+            <li>Dynamic scheduling, static typing</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+</section>
+
+<section>
+    <h2>Conclusion</h2>
+    <div>
+      <ul>
+        <li>A reactive synchronous extension of OCaml
+          <ul>
+            <li>Static scheduling before typing part of OCaml</li>
+            <li>Generates functions and callbacks to execute in JS with linear code size</li>
+            <li>Easy to install in an OCaml project (thanks to PPX)</li>
+          </ul>
+        </li>
+        <li>Futur works
+          <ul>
+            <li>Benchmarks</li>
+            <li>Try with a bigger application</li>
+            <li>Features (signals gathering, include it in OCsigen)</li>
+          </ul>
+        </li>
+      </ul>
+      <hr>
+      Fork it on <a href="https://github.com/remyzorg/pendulum">github</a>
+    </div>
+</section>
+
+
+      </div>
+    </div>
+
+          <!-- <embed src="index.html" style="width:800px; height: 600px;"> -->
+
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

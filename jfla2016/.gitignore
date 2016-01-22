@@ -1,0 +1,11 @@
+plugin
+test
+lib
+js
+bower.json
+package.json
+Gruntfile.js
+css
+node_modules
+MathJax
+

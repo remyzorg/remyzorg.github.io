@@ -1,0 +1,27 @@
+
+<html>
+  <head>
+    <script type="text/javascript" src="./reactiveplayer_fail.js" ></script>
+    <link rel="stylesheet" type="text/css" href="reactiveplayer.css">
+  </head>
+  <body>
+    <div>
+      <video
+         style="margin-left: 10%; margin-right:10%"
+         position="relative" id="reactiveplayer_media_fail" width="80%">
+        <source src="http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_720p_stereo.ogg" type="video/ogg">
+        <source src="bunny.ogg" type="video/ogg"> 
+      </video>
+    </div>
+    <br>
+    <div>
+      <input style="margin-left: 10%;" type="range"
+             id="reactiveplayer_progress_fail" min="0." max="1000" value="0." />
+    </div>
+    <br>
+    <div style="margin-left: 10%;">
+      <button id="reactiveplayer_play_fail" width="100px">Play </button>
+      <a style="color:white" id="reactiveplayer_timetxt_fail">0/0</a>
+    </div>
+  </body>
+</html>
