@@ -248,7 +248,7 @@ function initElement()
 
             <p align="left">
               <a style="color:tomato">Objective</a>:
-              Propose a usable (and useful) language for OCaml programmers
+              a useful language for OCaml Web programmers
             </p>
             <hr>
             <p align="left">
@@ -328,7 +328,22 @@ test_expr ::=
   | s [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
   | s<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
           </pre>
+</div>
+        </section>
 
+        <section>
+          <div>
+          <pre>
+  | <a style="color: royalblue">emit</a> s <a style="color:tomato">ocaml</a>
+  | <a style="color: royalblue">present</a> test_expr stmt stmt
+  | stmt <a style="color: royalblue">||</a> stmt
+  | stmt <a style="color: royalblue">;</a> stmt
+
+  | !<a style="color:tomato">ocaml</a>
+          </pre>
+          </div>
+<div style="width: 100%; overflow: hidden;">
+          <pre>| s<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]</pre>
 </div>
         </section>
 
@@ -532,7 +547,7 @@ let _ =
         </li>
       </ul>
       <hr>
-      Fork it on <a href="https://github.com/remyzorg/pendulum">github</a>
+      Browse code, examples and fork it on <a href="https://github.com/remyzorg/pendulum">github</a>
     </div>
 </section>
 
