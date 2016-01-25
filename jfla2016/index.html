@@ -16,7 +16,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/theme/white.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -27,25 +27,6 @@
 <script type="text/javascript"
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-
-<!--
-horloge globale
-pas a faible ressources
-et calcule instantané et projection sur modèle temps reel ensuite
-reaction instantanné
-
-jsoo from ocsigen
-effects (ocaml)
-
-mettre les types dans l'exemple ocaml
-modules et objets
-ajouter les dernières fonctionnalités
-ajouter un objet dans l'exemple ? pourquoi ## ?
-bindings js_of_ocaml + accès au dom ?
-
-
-ajouter l'info que c'est D(p) et S(p)
--->
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -78,12 +59,22 @@ MathJax.Hub.Config({
           <h1>Pendulum</h1>
           <h3>A reactive extension for OCaml Web programming</h3>
           <p>
-            <small><a>Rémy El Sibaïe, Emmanuel Chailloux</a></small>
+            <small><a>Rémy El Sibaïe, Emmanuel Chailloux, LIP6/UPMC - UCF project</a></small>
           </p>
         </section>
 
         <section>
-          <h2>Web is magic</h2>
+          <h2>Table of content</h1>
+          <ol>
+            <li>Context : client web programming</li>
+            <li>Pendulum : syntax and API</li>
+            <li>Compilation</li>
+            <li>Example : reactive video player</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2>Easy access to content</h2>
           Contents and APIs in a few lines of code
           <p>&nbsp;</p>
           <hr>
@@ -120,8 +111,8 @@ function jsonFlickrFeed(o) {
 
         
         <section>
-          <h2>Web is magic</h2>
-          Only one standard, <a style="color:deepskyblue">Javascript</a>
+          <h2>Easy access to code</h2>
+          Only one standard, <a style="color:royalblue">Javascript</a>
           <br>
           thousands of libraries
           <hr>
@@ -129,48 +120,50 @@ function jsonFlickrFeed(o) {
           <table>
             <tbody>
               <tr>
-                <td><a style="color:deepskyblue" >angular-js</a></td>
-                <td><a style="color:deepskyblue" >react</a></td>
-                <td><a style="color:deepskyblue" >moment</a></td>
+                <td><a style="color:royalblue" >angular-js</a></td>
+                <td><a style="color:royalblue" >react</a></td>
+                <td><a style="color:royalblue" >moment</a></td>
               </tr>
               <tr>
-                <td><a style="color:deepskyblue" >meteor</a></td>
-                <td><a style="color:deepskyblue" >foundation</a></td>
-                <td><a style="color:deepskyblue" >jquery</a></td>
+                <td><a style="color:royalblue" >meteor</a></td>
+                <td><a style="color:royalblue" >foundation</a></td>
+                <td><a style="color:royalblue" >jquery</a></td>
               </tr>
               <tr>
-                <td><a style="color:deepskyblue" >ember-js</a></td>
-                <td><a style="color:deepskyblue" >backbone</a></td>
-                <td><a style="color:deepskyblue" >d3</a></td>
+                <td><a style="color:royalblue" >ember-js</a></td>
+                <td><a style="color:royalblue" >backbone</a></td>
+                <td><a style="color:royalblue" >d3</a></td>
               </tr>
               <tr>
-                <td><a style="color:deepskyblue" >video.js</a></td>
-                <td><a style="color:deepskyblue" >chart.js</a></td>
-                <td><a style="color:deepskyblue" >redux</a></td>
+                <td><a style="color:royalblue" >video.js</a></td>
+                <td><a style="color:royalblue" >chart.js</a></td>
+                <td><a style="color:royalblue" >redux</a></td>
               </tr>
               <tr>
-                <td><a style="color:deepskyblue" >reveal.js</a></td>
-                <td><a style="color:deepskyblue" >less.js</a></td>
-                <td><a style="color:deepskyblue" >socket.io</a></td>
+                <td><a style="color:tomato" >reveal.js</a></td>
+                <td><a style="color:royalblue" >less.js</a></td>
+                <td><a style="color:royalblue" >socket.io</a></td>
             </tbody>
 					</table>
           ...
         </section>
 
         <section>
-          <h2>The runtime in a nutshell</h2>
+          <h2>JS runtime in a nutshell</h2>
 
           <hr>
 
             <p>An <a style="color:tomato">internal hidden loop</a></p>
             <p class="fragment">An event queue <a style="color:tomato">sequentially</a> processed</p>
-            <p class="fragment">API for UI: the <a style="color:deepskyblue">DOM</a></p>
+            <p class="fragment">The <a style="color:tomato">DOM</a> API </p>
           <p class="fragment">Automatic refresh of the UI</p>
 
         </section>
 
         <section>
           <h2>A lot of interactions</h2>
+
+          <p>From inside and ouside</p>
 
           <p>&nbsp;</p>
 
@@ -182,7 +175,7 @@ function jsonFlickrFeed(o) {
 
             <div style="position: absolute; left : 15%">
               <iframe
-                 width="640" height="390" src="//www.youtube.com/embed/JkK8g6FMEXE"
+                 width="640" height="390" src="http://www.youtube.com/embed/JkK8g6FMEXE"
                  frameborder="0"></iframe>
             </div>
 
@@ -205,34 +198,34 @@ function initElement()
 
 <ul>
   <li>Hard to express dependencies between <a style="color:tomato">events</a> and <a style="color:tomato">displays</a></li>
-  <li>Impossible to check them</li>
+  <li>Hard to check statically</li>
 </ul>
         </section>
 
         <section>
           <section>
-            <h2>Our solution: <a style="color:deepskyblue">Reactive-synchronous programming</a></h2>
+            <h2>Our solution: <a style="color:royalblue">Reactive-synchronous programming</a></h2>
           </section>
           <section>
             <h3>Reactive-synchronous programming</h2>
-            <p align="left">Designed to <a style="color:deepskyblue">check and
+            <p align="left">Designed to <a style="color:royalblue">check and
             generate</a> wiring design for embeded systems
               </p>
             <hr>
-            <p align="left">The program interacts <a style="color:deepskyblue">continuously</a> with its environnement</p> 
+            <p align="left">The program interacts <a style="color:royalblue">continuously</a> with its environnement</p> 
           </section>
           <section>
             <h3>Reactive-synchronous programming</h2>
-            Well-known examples: <a>Esterel</a>, <a>Lustre</a>, <a>ReactiveC</a>, ...
+            Well-known examples: <a>Esterel</a>, <a>Lustre</a>, <a>ReactiveML</a>, ...
             <hr>
             <p align="left">Several notions: </p>
             <ul>
-              <li>Time is discret and seen as <a style="color:deepskyblue">instants</a>
+              <li>Time is discret and seen as <a style="color:royalblue">instants</a>
                 with a global clock</li>
-              <li class="fragment">High level <a style="color:deepskyblue">
+              <li class="fragment">High level <a style="color:royalblue">
                   concurrency</a> (deterministic)</li>
               <li class="fragment">Dependency between the concurrent tasks
-              according to their <a style="color:deepskyblue">instantaneous communications</a></li>
+              according to their <a style="color:royalblue">instantaneous communications</a></li>
             </ul>
             <p class="fragment" align="left">Synchronous
               hypothesis \(\Rightarrow\) Causality analysis</p>
@@ -246,8 +239,8 @@ function initElement()
             <hr>
             <p align="left">Why ?</p>
             <ul>
-              <li>Combine <a style="color:deepskyblue">causality analysis</a>
-                and <a style="color:deepskyblue">type checking</a>
+              <li>Combine <a style="color:royalblue">causality analysis</a>
+                and <a style="color:royalblue">type checking</a>
                 for more safety and expressivity</li>
               <li>Benefit of <code>js_of_ocaml</code> (OCsigen) environnement</li>
             </ul>
@@ -256,6 +249,10 @@ function initElement()
             <p align="left">
               <a style="color:tomato">Objective</a>:
               Propose a usable (and useful) language for OCaml programmers
+            </p>
+            <hr>
+            <p align="left">
+            ReactiveML ?
             </p>
           </section>
 
@@ -296,7 +293,7 @@ let has_even_leaf tree =
 <pre><code class="ocaml" data-trim data-noescape>
 let initElement () =
   let p = Dom_html.document##getElementById "foo";
-  p<a style="color: deepskyblue">##.</a>onclick := (fun () ->
+  p<a style="color: royalblue">##.</a>onclick := (fun () ->
     alert("Click event detected")
   );
 </pre></code>
@@ -306,48 +303,35 @@ let initElement () =
 
         <section>
           <h2>Pendulum's language</h2>
-          Corresponding to Esterel's statements core
+          Inspired by Esterel's statements core
           <div>
           <pre>
-<a style="color: deepskyblue">prog</a> ::= <a style="color: deepskyblue">inout_decls</a> <a style="color: deepskyblue">stmt</a>
-<a style="color: deepskyblue">stmt</a> ::=
-  | nothing
-  | pause
-  | emit <a style="color: deepskyblue">s</a> <a style="color:tomato">ocaml</a>
-  | present <a style="color: deepskyblue">test_expr</a> <a style="color: deepskyblue">stmt</a> <a style="color: deepskyblue">stmt</a>
-  | loop <a style="color: deepskyblue">stmt</a>
-  | <a style="color: deepskyblue">stmt</a> || <a style="color: deepskyblue">stmt</a>
-  | <a style="color: deepskyblue">stmt</a> ; <a style="color: deepskyblue">stmt</a>
-  | let <a style="color: deepskyblue">s</a> = <a style="color:tomato">ocaml</a> in <a style="color: deepskyblue">stmt</a>
-  | trap <a style="color: deepskyblue">label</a> <a style="color: deepskyblue">stmt</a>
-  | exit <a style="color: deepskyblue">label</a>
-  | suspend <a style="color: deepskyblue">test_expr</a> <a style="color: deepskyblue">stmt</a>
+stmt ::=
+  | <a style="color: royalblue">nothing</a>
+  | <a style="color: royalblue">pause</a>
+  | <a style="color: royalblue">emit</a> s <a style="color:tomato">ocaml</a>
+  | <a style="color: royalblue">present</a> test_expr stmt stmt
+  | <a style="color: royalblue">loop</a> stmt
+  | stmt <a style="color: royalblue">||</a> stmt
+  | stmt <a style="color: royalblue">;</a> stmt
+  | <a style="color: royalblue">let</a> s <a style="color: royalblue">=</a> <a style="color:tomato">ocaml</a> <a style="color: royalblue">in</a> stmt
+  | <a style="color: royalblue">trap</a> label stmt
+  | <a style="color: royalblue">exit</a> label
+  | <a style="color: royalblue">suspend</a> test_expr stmt
   | !<a style="color:tomato">ocaml</a>
           </pre>
           </div>
 <div style="width: 100%; overflow: hidden;">
-  <div style="width: 420px; float: left;">
 
           <pre>
-<a style="color: deepskyblue">inout_decls</a> ::=
-  | input <a style="color: deepskyblue">s</a> ; 
-  | input <a style="color: deepskyblue">s</a> ; inout_decls
-          </pre>
-  </div>
-  <div style="margin-left: 400px;">
-
-          <pre>
-<a style="color: deepskyblue">test_expr</a> ::=
-  | <a style="color: deepskyblue">s</a> [& <a style="color:tomato">ocaml</a>]
-  | <a style="color: deepskyblue">s</a>##<a style="color: deepskyblue">event</a> [& <a style="color:tomato">ocaml</a>]
-
-!! : get signals values from OCaml
+test_expr ::=
+  | s [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
+  | s<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
           </pre>
 
-
-  </div>
 </div>
         </section>
+
 
         <section>
           <section>
@@ -357,16 +341,16 @@ let initElement () =
   tarea##.textContent := Js.some (Js.string
     (Format.sprintf "%dx%d" (ev##.clientX) (ev##.clientY)))
 
-let%sync mouse =
-  <a style="color:deepskyblue">input</a> tarea;
-  <a stype="color: deepskyblue">input</a> window;
-  <a stype="color: deepskyblue">loop</a> (
-    <a stype="color: deepskyblue">present</a> window##onmousemove <a style="color: deepskyblue">!</a>(
-      match !!(window##onmousemove) with
+<span class="fragment zoom-in highlight-current-green">let%sync</span> mouse =
+  <a style="color:dodgerblue">input</a> tarea;
+  <a style="color: dodgerblue">input</a> window;
+  <a style="color: dodgerblue">loop</a> (
+    <a style="color: dodgerblue">present</a> <span class="fragment zoom-in highlight-current-green">window##onmousemove</span> <a class="fragment zoom-in highlight-current-green">!</a>(
+      match <span class="fragment zoom-in highlight-current-green">!!</span>(window##onmousemove) with
       | None -> ()
       | Some ev -> update_field !!tarea ev
     );
-    <a stype="color: deepskyblue">pause</a>
+    <a style="color: dodgerblue">pause</a>
   )
 </pre></code>
 
@@ -374,6 +358,11 @@ let%sync mouse =
           <section>
           <h2>Mouse loc example</h2>
 
+<pre><code class="ocaml" data-trim data-noescape>
+val mouse :
+  (anchorElement t * window t) ->
+  (anchorElement t -> unit) * (unit -> machine_state))
+</pre></code>
 
 <pre><code class="ocaml" data-trim data-noescape>open Dom_html
 let _ =
@@ -383,102 +372,10 @@ let _ =
       Js._false
     )
 </pre></code>
-
 <div>
   <script type="text/javascript" src="./mouse.js" ></script>
-  <a style="color:white" id="tarea"></a>
+  <a style="color:black" id="tarea"></a>
 </div>
-
-          </section>
-        </section>
-
-
-
-        <section>
-          <h2>Programming interface</h2>
-
-<pre><code class="ocaml" data-trim data-noescape>let set_tarea, step = mouse_machine (tarea, window) in ...
-</pre></code>
-             <hr>
-             <p font-size="8">
-  $$\overbrace{t_0 ~*\dots*~ t_{n-1}}^{inputs~type} 
-  \rightarrow \\ \overbrace{(\tau_0
-  \rightarrow unit) ~*\dots*~ (\tau_{k-1} \rightarrow unit )}^{outputs~type} \rightarrow \\
-  \overbrace{((t_0 \rightarrow unit)~*\dots*~(t_{n-1} \rightarrow
-    unit))~*~(unit \rightarrow status)}^{setters~*~reaction} $$
-             </p>
-        </section>
-
-
-        <section>
-
-          <section>
-
-            <h3>Compilation</h3>
-            <a style="color:tomato">Esterel's GRC</a> : control-flow graph and
-            selection tree (uniquely indexed AST)
-            <hr>
-            <pre>
-              <a style="color: Deepskyblue">action</a> ::= <a style="color: deepskyblue">emit</a> signal
-              | <a style="color: deepskyblue">exit</a> int 
-              | <a style="color: deepskyblue">enter</a> int
-              | <a style="color: deepskyblue">local</a> signal
-              | <a style="color: deepskyblue">inst</a> (id, signal[,signal])
-              
-              test ::= sel int | present signal 
-              | sync (int, int) | finished
-              | ispaused id
-              
-              <a style="color: deepskyblue">node</a> ::= <a style="color: deepskyblue">call</a> (action, node)
-              | <a style="color: deepskyblue">branch</a> (test, node, node)
-              | <a style="color: deepskyblue">fork</a> (node, node)
-              | <a style="color: deepskyblue">finish</a> | <a style="color: deepskyblue">pause</a>
-            </pre>
-
-          </section>
-
-          <section>
-            <h3>Compilation</h3>
-
-            Surface(\(\mathcal{S}(p)\)) and Depth(\(\mathcal{D}(p)\))
-            <hr>
-
-            $$ \mathcal{S}(\mathtt{emit}~s)
-            \overset{\omega, \kappa, \Omega} \leadsto emit~s \blacktriangleright \omega $$
-            $$ \mathcal{D}(\mathtt{emit}~s) \overset{\omega, \kappa, \Omega}\leadsto \omega $$
-
-            <p>&nbsp;</p>
-
-            $$ \mathcal{S}(\mathtt{pause}) \overset{\omega, \kappa, \Omega} \leadsto
-            enter~p \blacktriangleright \kappa$$
-
-            $$ \mathcal{D}(\mathtt{pause}) \overset{\omega, \kappa, \Omega} \leadsto
-            exit~p \blacktriangleright \omega$$
-            
-          </section>
-          <section>
-
-
-            $$ \mathcal{S}(\mathtt{loop}~q) \overset{\kappa, \kappa, \Omega}
-            \leadsto enter~p \blacktriangleright \mathcal{S}(q)$$
-
-
-            $$ \mathcal{D}(\mathtt{loop}~q) \overset{\mathcal{S}(q), \kappa, \Omega}
-            \leadsto \mathcal{D}(q) $$
-
-            <p>&nbsp;</p>
-
-
-            $$ \mathcal{S}(\mathtt{present}~s~q~r)
-            \overset{exit~p\blacktriangleright\omega,\kappa, \Omega}
-            \leadsto enter~p \blacktriangleright
-            \mathtt{branch}~(signal~s, \mathcal{S}(q),\mathcal{S}(r))$$
-
-            $$ \mathcal{D}(\mathtt{present}~s~q~r)
-            \overset{exit~p\blacktriangleright\omega, \kappa, \Omega}
-            \leadsto \mathtt{branch}~(sel~q, \mathcal{D}(q), \mathcal{D}(r))$$
-
-
 
           </section>
         </section>
@@ -488,36 +385,36 @@ let _ =
 <div style="width: 100%; overflow: hidden;">
   <div style="width: 580px; float: left;">
 <pre><code class="ocaml" data-trim data-noescape>let%sync mouse =
-  <a style="color: deepskyblue">input</a> tarea;
-  <a style="color: deepskyblue">input</a> window;
-  <a style="color: deepskyblue">loop</a> (
-    <a stype="color: deepskyblue">present</a> window##onmousemove <a style="color: deepskyblue">!</a>(
+  <a style="color: royalblue">input</a> tarea;
+  <a style="color: royalblue">input</a> window;
+  <a style="color: royalblue">loop</a> (
+    <a stype="color: royalblue">present</a> window##onmousemove <a style="color: royalblue">!</a>(
       match !!(window##onmousemove) with
       | None -> ()
       | Some ev ->
           update_field !!tarea ev
     );
-    <a style="color: deepskyblue">pause</a>)
+    <a style="color: royalblue">pause</a>)
 </pre></code>
   </div>
   <div style="margin-left: 550px;">
     <h3>Compilation</h3>
-    <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a></p> 
+    <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a> of the step</p> 
   </div>
 </div>
-<img style="background:none; border:none;" height="350" src="main_mouse_machine_tagged2.png"/>
+<img style="background:none; border:none;" height="350" src="main_mouse_tagged.svg"/>
 
 </section>
 
         <section>
           <div style="width: 100%; overflow: hidden;">
-            <div style="width: 500px; float: left;">
-              <img style="background:none; border:none;" height="700" src="main_mouse_machine_fg2.png"/>
+            <div style="width: 350px; float: left;">
+              <img style="background:none; border:none;" height="600" src="main_mouse_fg.svg"/>
             </div>
-            <div style="margin-left: 500px;">
+            <div style="margin-left: 350px;">
               <h3>Compilation</h2>
-              <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a></p> 
-              <img position="asolute" style="background:none; border:none;" src="main_mouse_machine_tagged2.png"/>
+              <p position="">From Pendulum to a <a style="color:tomato">control-flow graph</a> of the step</p> 
+              <img position="asolute" style="background:none; border:none;" src="main_mouse_tagged.svg"/>
            </div>
            </div>
           </section>
@@ -536,7 +433,7 @@ let _ =
         </section>
 
         <section>
-    <h2>Naive code</h2>
+    <h2>Inputs</h2>
 <pre><code class="ocaml" data-trim data-noescape>let%sync reactive_player =
   <a style="color: deepskyblue">input</a> play_pause; (* the button *)
   <a style="color: deepskyblue">input</a> progress_bar; (* the seeker element *)
@@ -544,66 +441,45 @@ let _ =
   <a style="color: deepskyblue">input</a> time_a; (* the a elt displaying time*)
   let no_update = () in
   let state = Js.to_bool media##.paused in
-  <a style="color: deepskyblue">loop</a> (
-    <a style="color: deepskyblue">present</a> media##onplay
-      <a style="color: deepskyblue">!</a>(play_pause##.textContent :=
-        Js.some (Js.string "Pause"));
-    <a style="color: deepskyblue">pause</a>)
 
 </pre></code>
 
         </section>
         <section>
-    <h2>Naive code</h2>
-<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> play_pause##onclick (
-    <a style="color: deepskyblue">emit</a> state (not !!state));
+    <h2>Change state</h2>
+    <pre><code class="ocaml" data-trim data-noescape>
+&nbsp;&nbsp;<a style="color: deepskyblue">loop</a> (
+    <a style="color: deepskyblue">present</a> media##onplay
+      <a style="color: deepskyblue">!</a>(play_pause##.textContent := Js.some (Js.string "Pause"));
     <a style="color: deepskyblue">pause</a>)
+
+  || <a style="color: deepskyblue">loop</a> (
+    <a style="color: deepskyblue">present</a> play_pause##onclick (<a style="color: deepskyblue">emit</a> state (not !!state));
+    <a style="color: deepskyblue">pause</a>)
+
   || <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> state
-    <a style="color:deepbluesky">!</a>(update_state !!state media play_pause);
+    <a style="color:deepskyblue">!</a>(update_state !!state media play_pause);
     <a style="color: deepskyblue">pause</a>)
-
-  || <a style="color:deepbluesky">loop</a> (<a style="color:deepbluesky">present</a> progress_bar##onmouseup
-      <a style="color:deepbluesky">!</a>(update_media media progress_bar);
-    <a style="color:deepbluesky">pause</a>)
-
-  || <a style="color:deepbluesky">loop</a> (
-     <a style="color:deepbluesky">present</a> media##onprogress (
-      <a style="color:deepbluesky">!</a>(update_slider progress_bar media);
-      <a style="color:deepbluesky">!</a>(update_time_a media !!time_a)
-    ); <a style="color:deepbluesky">pause</a>)
 </pre></code>
 </section>
 
 <section>
-  <section style="margin: 0 auto">
-    <h2>Progress bar is wrong !</h2>
+    <h2>Handle progress bar</h2>
+<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color:deepskyblue">loop</a> (
+    <a style="color:deepskyblue">await</a> progress_bar##onmousedown;
+    <a style="color:deepskyblue">trap</a> t' (<a style="color:deepskyblue">loop</a>(
+        <a style="color:deepskyblue">emit</a> no_update ();
+        <a style="color:deepskyblue">present</a> progress_bar##onmouseup
+          (<a style="color:deepskyblue">!</a>(update_media media progress_bar); <a style="color:deepskyblue">exit</a> t');
+        <a style="color:deepskyblue">pause</a>)
+      ); <a style="color:deepskyblue">pause</a>)
 
-    <div
-       position="relative" width="800px"
-       style="top:25%; left:25%; right:25%; margin: 0 auto">
-      <embed src="reactiveplayer_fail.html"
-             style="width:800px; height:650px;margin: 0 auto">
-    </div>
-  </section>
-</section>
-
-<section>
-    <h2>Fix the code</h2>
-<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color:deepbluesky">loop</a> (
-    <a style="color:deepbluesky">await</a> progress_bar##onmousedown;
-    <a style="color:deepbluesky">trap</a> t' (<a style="color:deepbluesky">loop</a>(
-        <a style="color:deepbluesky">emit</a> no_update ();
-        <a style="color:deepbluesky">present</a> progress_bar##onmouseup
-          (<a style="color:deepbluesky">!</a>(update_media media progress_bar); <a style="color:deepbluesky">exit</a> t');
-        <a style="color:deepbluesky">pause</a>)
-      ); <a style="color:deepbluesky">pause</a>)
-
-  || <a style="color:deepbluesky">loop</a> (
-    <a style="color:deepbluesky">present</a> media##onprogress (
-      <a style="color:deepbluesky">present</a> no_update <a style="color:deepbluesky">nothing</a> <a style="color:deepbluesky">!</a>(update_slider progress_bar media)
+  || <a style="color:deepskyblue">loop</a> (
+    <a style="color:deepskyblue">present</a> media##onprogress (
+      <a style="color:deepskyblue">present</a> no_update <a style="color:deepskyblue">nothing</a> <a style="color:deepskyblue">!</a>(update_slider progress_bar media)
       ||
-      <a style="color:deepbluesky">!</a>(update_time_a media (!!time_a))
-    ); <a style="color:deepbluesky">pause</a>)
+      <a style="color:deepskyblue">!</a>(update_time_a media (!!time_a))
+    ); <a style="color:deepskyblue">pause</a>)
 </pre></code>
 <a href="#/14">Result</a>
 
@@ -613,20 +489,20 @@ let _ =
     <h2>Related works and inspiration</h2>
     <div>
       <ul>
-        <li><a style="color:deepskyblue">ReactiveML</a>
+        <li><a style="color:royalblue">ReactiveML</a>
           <ul>
             <li>Compiled with continuations with static typing</li>
             <li>ReactiveC model (more constrained)</li>
             <li>Dynamic scheduling</li>
           </ul>
         </li>
-        <li><a style="color:deepskyblue">Hop + HipHop(Esterel)</a> (HipHop.js ?)
+        <li><a style="color:royalblue">Hop + HipHop(Esterel)</a> (HipHop.js ?)
           <ul>
             <li>Dynamic scheduling: interpretation and construction of the Esterel AST</li>
             <li>Dynamic typing</li>
           </ul>
         </li>
-        <li><a style="color:deepskyblue">Eliom(OCsigen) + React</a> (OCaml)
+        <li><a style="color:royalblue">Eliom(OCsigen) + React</a> (OCaml)
           <ul>
             <li>Functional reactive programming</li>
             <li>Dynamic scheduling, static typing</li>
@@ -664,6 +540,7 @@ let _ =
       </div>
     </div>
 
+
           <!-- <embed src="index.html" style="width:800px; height: 600px;"> -->
 
 
@@ -695,5 +572,12 @@ let _ =
 
 		</script>
 
+
 	</body>
+
+<img id="myLogo" src="upmc.png" style="position: absolute;
+                        bottom: 10px;
+                        left: 10px;
+                        width: 100px;
+                        height: 60px;"/>
 </html>
