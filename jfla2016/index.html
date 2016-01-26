@@ -66,10 +66,10 @@ MathJax.Hub.Config({
         <section>
           <h2>Table of content</h1>
           <ol>
-            <li><a style="color:royalblue" >Context</a> : client web programming</li>
-            <li><a style="color:royalblue" >Pendulum</a> : syntax and API</li>
-            <li><a style="color:royalblue" >Compilation</a></li>
-            <li><a style="color:royalblue" >Example</a> : reactive video player</li>
+            <li><a style="color:royalblue" >Context</a>: client web programming</li>
+            <li><a style="color:royalblue" >Pendulum</a>: syntax and API</li>
+            <li><a style="color:royalblue" >Compilation</a>: GRC intermediate representation</li>
+            <li><a style="color:royalblue" >Example</a>: reactive video player</li>
           </ol>
         </section>
 
@@ -204,7 +204,7 @@ function initElement()
 
         <section>
           <section>
-            <h2>Our solution: <a style="color:royalblue">Reactive-synchronous programming</a></h2>
+            <h2>Our solution:<br/> <a style="color:royalblue">Reactive-synchronous <br/>programming</a></h2>
           </section>
           <section>
             <h3>Reactive-synchronous programming</h2>
@@ -216,7 +216,7 @@ function initElement()
           </section>
           <section>
             <h3>Reactive-synchronous programming</h2>
-            Well-known examples: <a>Esterel</a>, <a>Lustre</a>, <a>ReactiveML</a>, ...
+            Well-known examples: <span style="color:royalblue">Esterel</span>, <span style="color:royalblue">Lustre</span>, <span style="color:royalblue">ReactiveML</span>, ...
             <hr>
             <p align="left">Several notions: </p>
             <ul>
@@ -432,7 +432,7 @@ let _ =
   </div>
   <div style="margin-left: 550px;">
     <h3>Compilation</h3>
-    <p position="">Pendulum to GRC</p> 
+    <p position="">Example: the selection tree</p> 
   </div>
 </div>
 <img style="background:none; border:none;" height="350" src="main_mouse_tagged.svg"/>
@@ -447,7 +447,7 @@ let _ =
             </div>
             <div style="margin-left: 350px;">
               <h3>Compilation</h2>
-              <p position="">Pendulum to GRC: <br/><a style="color:tomato">control-flow graph of the instant</a></p> 
+              <p position="">Example: the flowgraph</a></p> 
               <img position="asolute" style="background:none; border:none;" src="main_mouse_tagged.svg"/>
            </div>
            </div>
@@ -569,9 +569,9 @@ let%sync reactive_player =
         </li>
         <li>Futur works
           <ul>
+            <li>Causality analysis implementation</li>
             <li>Benchmarks</li>
-            <li>Try with a bigger application</li>
-            <li>Features (signals gathering, include it in OCsigen)</li>
+            <li>Try with a bigger application (Eliom)</li>
           </ul>
         </li>
       </ul>
