@@ -210,7 +210,7 @@ function initElement()
             <h3>Reactive-synchronous programming</h2>
             <p align="left">Designed to <a style="color:royalblue">check and
             generate</a> wiring design for embeded systems
-              </p>
+            </p>
             <hr>
             <p align="left">The program interacts <a style="color:royalblue">continuously</a> with its environnement</p> 
           </section>
@@ -326,24 +326,8 @@ stmt ::=
           <pre>
 test_expr ::=
   | s [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
-  | s<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
+  | elt<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]
           </pre>
-</div>
-        </section>
-
-        <section>
-          <div>
-          <pre>
-  | <a style="color: royalblue">emit</a> s <a style="color:tomato">ocaml</a>
-  | <a style="color: royalblue">present</a> test_expr stmt stmt
-  | stmt <a style="color: royalblue">||</a> stmt
-  | stmt <a style="color: royalblue">;</a> stmt
-
-  | !<a style="color:tomato">ocaml</a>
-          </pre>
-          </div>
-<div style="width: 100%; overflow: hidden;">
-          <pre>| s<a style="color: royalblue">##</a>event [<a style="color: royalblue">&</a> <a style="color:tomato">ocaml</a>]</pre>
 </div>
         </section>
 
@@ -352,20 +336,21 @@ test_expr ::=
           <section>
           <h2>Mouse loc example</h2>
 
-<pre><code class="ocaml" data-trim data-noescape>let update_field tarea ev =
-  tarea##.textContent := Js.some (Js.string
+          <pre><code class="ocaml" data-trim data-noescape>
+let update_field anchor ev =
+  anchor##.textContent := Js.some (Js.string
     (Format.sprintf "%dx%d" (ev##.clientX) (ev##.clientY)))
 
 <span class="fragment zoom-in highlight-current-green">let%sync</span> mouse =
-  <a style="color:dodgerblue">input</a> tarea;
-  <a style="color: dodgerblue">input</a> window;
-  <a style="color: dodgerblue">loop</a> (
-    <a style="color: dodgerblue">present</a> <span class="fragment zoom-in highlight-current-green">window##onmousemove</span> <a class="fragment zoom-in highlight-current-green">!</a>(
+  <a style="color:deepskyblue">input</a> anchor;
+  <a style="color: deepskyblue">input</a> window;
+  <a style="color: deepskyblue">loop</a> (
+    <a style="color: deepskyblue">present</a> <span class="fragment zoom-in highlight-current-green">window##onmousemove</span> <a class="fragment zoom-in highlight-current-green">!</a>(
       match <span class="fragment zoom-in highlight-current-green">!!</span>(window##onmousemove) with
       | None -> ()
-      | Some ev -> update_field !!tarea ev
+      | Some ev -> update_field !!anchor ev
     );
-    <a style="color: dodgerblue">pause</a>
+    <a style="color: deepskyblue">pause</a>
   )
 </pre></code>
 
@@ -376,14 +361,14 @@ test_expr ::=
 <pre><code class="ocaml" data-trim data-noescape>
 val mouse :
   (anchorElement t * window t) ->
-  (anchorElement t -> unit) * (unit -> machine_state))
+  (anchorElement t -> unit) * (unit -> machine_state)
 </pre></code>
 
 <pre><code class="ocaml" data-trim data-noescape>open Dom_html
 let _ =
   window##.onload := handler (fun _ ->
-      let tarea = CoerceTo.a "tarea" in
-      let set_tarea, react = mouse (tarea, window) in
+      let anchor = CoerceTo.a "anchor" in
+      let set_anchor, react = mouse (anchor, window) in
       Js._false
     )
 </pre></code>
@@ -395,21 +380,54 @@ let _ =
           </section>
         </section>
 
+        <section>
+          <h3>Compilation</h3>
+          <p align="left">
+            From Pendulum to GRC (GRaphCode).
+          </p>
+          <ul>
+            <li><a style="color: royalblue">selection tree</a>: indexed AST</li>
+            <li><a style="color: royalblue">flowgraph</a>: recursively construct two graphs for each sub-statement: <ul>
+                <li><a style="color: royalblue">surface (S)</a>: flowgraph of first execution</li>
+                <li><a style="color: royalblue">depth (D)</a>: flowgraph of following executions</li>
+              </ul>
+            </li>
+          </ul>
+          <p align="left">
+            Result: the <a style="color: tomato">flowgraph of the
+            instant</a>, <a style="color: royalblue">selection tree</a> as
+            environment
+          </p>
+        </section>
+
+        <section>
+          p = pause
+<div>
+<img style="background:none; border:none;" height="350" src="compiling_rules/pause_rule.svg"/>
+</div>
+        </section>
+
+        <section>
+          p = loop(q)
+<div>
+<img style="background:none; border:none;" height="350" src="compiling_rules/loop_rule.svg"/>
+</div>
+        </section>
 
         <section>
 <div style="width: 100%; overflow: hidden;">
   <div style="width: 580px; float: left;">
 <pre><code class="ocaml" data-trim data-noescape>let%sync mouse =
-  <a style="color: royalblue">input</a> tarea;
-  <a style="color: royalblue">input</a> window;
-  <a style="color: royalblue">loop</a> (
-    <a stype="color: royalblue">present</a> window##onmousemove <a style="color: royalblue">!</a>(
+  <a style="color: deepskyblue">input</a> anchor;
+  <a style="color: deepskyblue">input</a> window;
+  <a style="color: deepskyblue">loop</a> (
+    <a style="color: deepskyblue">present</a> window##onmousemove <a style="color: deepskyblue">!</a>(
       match !!(window##onmousemove) with
       | None -> ()
       | Some ev ->
-          update_field !!tarea ev
+          update_field !!anchor ev
     );
-    <a style="color: royalblue">pause</a>)
+    <a style="color: deepskyblue">pause</a>)
 </pre></code>
   </div>
   <div style="margin-left: 550px;">
@@ -420,6 +438,7 @@ let _ =
 <img style="background:none; border:none;" height="350" src="main_mouse_tagged.svg"/>
 
 </section>
+
 
         <section>
           <div style="width: 100%; overflow: hidden;">
@@ -436,7 +455,7 @@ let _ =
 
         <section style="margin: 0 auto">
           <h2>Video application example</h2>
-          <a href="#/19">Jump to the end</a>
+          <a href="#/17">Jump to the end</a>
 
           <div
              position="relative" width="800px"
@@ -449,23 +468,32 @@ let _ =
 
         <section>
     <h2>Inputs</h2>
-<pre><code class="ocaml" data-trim data-noescape>let%sync reactive_player =
+    <pre><code class="ocaml" data-trim data-noescape>
+let update_state video play_pause state = ...
+let set_video_time video progress_bar = ...
+let set_progress_value progress_bar video = ...
+let update_anchor video anchor = ...
+        
+let%sync reactive_player =
   <a style="color: deepskyblue">input</a> play_pause; (* the button *)
   <a style="color: deepskyblue">input</a> progress_bar; (* the seeker element *)
-  <a style="color: deepskyblue">input</a> media; (* the video element *)
+  <a style="color: deepskyblue">input</a> video; (* the video element *)
   <a style="color: deepskyblue">input</a> time_a; (* the a elt displaying time*)
   let no_update = () in
-  let state = Js.to_bool media##.paused in
+  let state = Js.to_bool video##.paused in
 
 </pre></code>
 
         </section>
         <section>
-    <h2>Change state</h2>
+    <h2>Switch state</h2>
     <pre><code class="ocaml" data-trim data-noescape>
-&nbsp;&nbsp;<a style="color: deepskyblue">loop</a> (
-    <a style="color: deepskyblue">present</a> media##onplay
-      <a style="color: deepskyblue">!</a>(play_pause##.textContent := Js.some (Js.string "Pause"));
+&nbsp;&nbsp;<a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> video##onplay <a style="color: deepskyblue">!</a>(
+    play_pause##.textContent := Js.some (Js.string "Pause"));
+    <a style="color: deepskyblue">pause</a>)
+
+&nbsp;&nbsp;|| <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> video##onpause <a style="color: deepskyblue">!</a>(
+    play_pause##.textContent := Js.some (Js.string "Play"));
     <a style="color: deepskyblue">pause</a>)
 
   || <a style="color: deepskyblue">loop</a> (
@@ -473,7 +501,7 @@ let _ =
     <a style="color: deepskyblue">pause</a>)
 
   || <a style="color: deepskyblue">loop</a> (<a style="color: deepskyblue">present</a> state
-    <a style="color:deepskyblue">!</a>(update_state !!state media play_pause);
+    <a style="color:deepskyblue">!</a>(update_state video play_pause !!state );
     <a style="color: deepskyblue">pause</a>)
 </pre></code>
 </section>
@@ -485,15 +513,16 @@ let _ =
     <a style="color:deepskyblue">trap</a> t' (<a style="color:deepskyblue">loop</a>(
         <a style="color:deepskyblue">emit</a> no_update ();
         <a style="color:deepskyblue">present</a> progress_bar##onmouseup
-          (<a style="color:deepskyblue">!</a>(update_media media progress_bar); <a style="color:deepskyblue">exit</a> t');
+          (<a style="color:deepskyblue">!</a>(set_video_time video progress_bar); <a style="color:deepskyblue">exit</a> t');
         <a style="color:deepskyblue">pause</a>)
       ); <a style="color:deepskyblue">pause</a>)
 
   || <a style="color:deepskyblue">loop</a> (
-    <a style="color:deepskyblue">present</a> media##onprogress (
-      <a style="color:deepskyblue">present</a> no_update <a style="color:deepskyblue">nothing</a> <a style="color:deepskyblue">!</a>(update_slider progress_bar media)
+    <a style="color:deepskyblue">present</a> video##onprogress (
+      <a style="color:deepskyblue">present</a> no_update <a style="color:deepskyblue">nothing</a>
+        <a style="color:deepskyblue">!</a>(set_progress_value progress_bar video)
       ||
-      <a style="color:deepskyblue">!</a>(update_time_a media (!!time_a))
+      <a style="color:deepskyblue">!</a>(update_anchor video (!!time_a))
     ); <a style="color:deepskyblue">pause</a>)
 </pre></code>
 <a href="#/14">Result</a>
