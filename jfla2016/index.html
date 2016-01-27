@@ -66,10 +66,11 @@ MathJax.Hub.Config({
         <section>
           <h2>Table of content</h1>
           <ol>
-            <li><a style="color:royalblue" >Context</a>: client web programming</li>
-            <li><a style="color:royalblue" >Pendulum</a>: syntax and API</li>
-            <li><a style="color:royalblue" >Compilation</a>: GRC intermediate representation</li>
-            <li><a style="color:royalblue" >Example</a>: reactive video player</li>
+            <li><span style="color:royalblue" >Context</span>: client web programming</li>
+            <li><span style="color:royalblue" >Pendulum</span>: syntax and API</li>
+            <li><span style="color:royalblue" >Compilation</span>: GRC intermediate representation</li>
+            <li><span style="color:royalblue" >Example</span>: reactive video player</li>
+            <li style="list-style-type:none" >Related works & conclusion</li>
           </ol>
         </section>
 
@@ -358,7 +359,7 @@ let update_field anchor ev =
           <h2>Mouse loc example</h2>
 
 <pre><code class="ocaml" data-trim data-noescape>
-val mouse :
+val <span class="fragment zoom-in highlight-current-green">mouse</span> :
   (anchorElement t * window t) ->
   (anchorElement t -> unit) * (unit -> machine_state)
 </pre></code>
@@ -367,7 +368,7 @@ val mouse :
 let _ =
   window##.onload := handler (fun _ ->
       let anchor = CoerceTo.a "anchor" in
-      let set_anchor, react = mouse (anchor, window) in
+      let set_anchor, react = <span class="fragment zoom-in highlight-current-green">mouse</span> (anchor, window) in
       Js._false
     )
 </pre></code>
@@ -454,7 +455,7 @@ let _ =
 
         <section style="margin: 0 auto">
           <h2>Video application example</h2>
-          <a href="#/17">Jump to the end</a>
+          <a href="#/21">Jump to the end</a>
 
           <div
              position="relative" width="800px"
@@ -471,14 +472,11 @@ let _ =
 let update_state video play_pause state = ...
 let set_video_time video progress_bar = ...
 let set_progress_value progress_bar video = ...
-let update_anchor video anchor = ...
         
 let%sync reactive_player =
   <a style="color: deepskyblue">input</a> play_pause; (* the button *)
   <a style="color: deepskyblue">input</a> progress_bar; (* the seeker element *)
   <a style="color: deepskyblue">input</a> video; (* the video element *)
-  <a style="color: deepskyblue">input</a> time_a; (* the a elt displaying time*)
-  let no_update = () in
   let state = Js.to_bool video##.paused in
 
 </pre></code>
@@ -507,24 +505,24 @@ let%sync reactive_player =
 
 <section>
     <h2>Handle progress bar</h2>
-<pre><code class="ocaml" data-trim data-noescape>&nbsp;&nbsp;|| <a style="color:deepskyblue">loop</a> (
+    <pre><code class="ocaml" data-trim data-noescape>
+  &nbsp;&nbsp;||
+  let no_update = () in
+  <a style="color:deepskyblue">loop</a> (
     <a style="color:deepskyblue">await</a> progress_bar##onmousedown;
     <a style="color:deepskyblue">trap</a> t' (<a style="color:deepskyblue">loop</a>(
-        <a style="color:deepskyblue">emit</a> no_update ();
-        <a style="color:deepskyblue">present</a> progress_bar##onmouseup
-          (<a style="color:deepskyblue">!</a>(set_video_time video progress_bar); <a style="color:deepskyblue">exit</a> t');
-        <a style="color:deepskyblue">pause</a>)
-      ); <a style="color:deepskyblue">pause</a>)
+      <a style="color:deepskyblue">emit</a> no_update ();
+      <a style="color:deepskyblue">present</a> progress_bar##onmouseup
+        (<a style="color:deepskyblue">!</a>(set_video_time video progress_bar); <a style="color:deepskyblue">exit</a> t');
+      <a style="color:deepskyblue">pause</a>)
+    ); <a style="color:deepskyblue">pause</a>)
 
-  || <a style="color:deepskyblue">loop</a> (
-    <a style="color:deepskyblue">present</a> video##onprogress (
-      <a style="color:deepskyblue">present</a> no_update <a style="color:deepskyblue">nothing</a>
+  || <a style="color:deepskyblue">loop</a> (<a style="color:deepskyblue">present</a> video##onprogress (
+       <a style="color:deepskyblue">present</a> no_update <a style="color:deepskyblue">nothing</a>
         <a style="color:deepskyblue">!</a>(set_progress_value progress_bar video)
-      ||
-      <a style="color:deepskyblue">!</a>(update_anchor video (!!time_a))
     ); <a style="color:deepskyblue">pause</a>)
 </pre></code>
-<a href="#/14">Result</a>
+<a href="#/17">Result</a>
 
 </section>
 
