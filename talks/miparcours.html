@@ -82,7 +82,7 @@ MathJax.Hub.Config({
             <p>It's a new gold rush, </p> <ul>
               <li>to content/data : <ul>
                   <li><span style="color:royalblue">From device</span>: personnal data, geolocation, ...</li>
-                  <li><span style="color:royalblue">From network</span> : geocoding (Google&reg), artistic content, ... </li>
+                  <li><span style="color:royalblue">From network</span> : nearby places, meta-data, ... </li>
                 </ul>
               </li>
               <li>to libraries (dynamically linked)
@@ -90,10 +90,12 @@ MathJax.Hub.Config({
                   <li><span style="color:royalblue">chart.js</span>, <span style="color:royalblue">pdf.js</span>, <span style="color:royalblue">video.js</span>,
                   <span style="color:royalblue">socket.io</span>, <span style="color:royalblue">reveal.js</span></li>
                   <li>and thousands of them...</li>
-
                 </ul>
               </li>
             </ul>
+
+            <p>One standard : <span style="color:royalblue">JavaScript</span></p>
+            
         </section>
 
         
@@ -112,7 +114,7 @@ MathJax.Hub.Config({
         <section>
           <h2>A lot of interactions</h2>
 
-          <p>From inside and ouside</p>
+          <p>From hardware and network</p>
 
           <p>&nbsp;</p>
 
@@ -150,6 +152,9 @@ function initElement()
   <li>Hard to express dependencies between <a style="color:tomato">events</a> and <a style="color:tomato">displays</a></li>
   <li>Hard to check statically</li>
 </ul>
+
+<p>in a nutshell: <span style="color:royalblue">High level but naive API</span></p>
+
         </section>
 
         <section>
