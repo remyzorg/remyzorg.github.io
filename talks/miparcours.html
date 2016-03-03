@@ -57,7 +57,7 @@ MathJax.Hub.Config({
 			<div class="slides">
         <section>
           <h4>Programmation Web réactive<br/> dans un cadre typé statiquement<br/> pour l'orchestration de <br/>contenus multimédia riches</h4>
-          <p><a>Évaluation a mi-parcours</a>
+          <p><a>Évaluation à mi-parcours</a>
           <p>
             <small><a>Rémy El Sibaïe, Emmanuel Chailloux - LIP6/UPMC - UCF project</a></small>
           </p>
@@ -68,8 +68,8 @@ MathJax.Hub.Config({
           <ol>
             <li><span style="color:royalblue">Context</span>: client Web</li>
             <li><span style="color:royalblue">Related works<span></li>
-            <li><span style="color:royalblue">Past/Current work</span>: Embbeded reactive language</li>
-            <li><span style="color:royalblue">Example</span>: reactive video player</li>
+            <li><span style="color:royalblue">Past/Current work</span>: Embedded reactive language</li>
+            <li><span style="color:royalblue">Example</span>: Reactive video player</li>
             <li><span style="color:royalblue">Futur work</span></li>
             <li style="list-style-type:none">Conclusion</li>
           </ol>
@@ -164,14 +164,14 @@ function initElement()
           <section>
             <h3>Reactive-synchronous programming</h2>
             <p align="left">Designed to <a style="color:royalblue">check and
-            generate</a> wiring design for embeded systems
+            generate</a> wiring design for embedded systems
             </p>
             <hr>
             <p align="left">The program interacts <a style="color:royalblue">continuously</a> with its environnement</p> 
           </section>
           <section>
             <h3>Reactive-synchronous programming</h2>
-            Well-known examples: <span style="color:royalblue">Esterel</span>, <span style="color:royalblue">Lustre</span>, <span style="color:royalblue">ReactiveML</span>, ...
+            Well-known examples: <span style="color:royalblue">Esterel</span>, <span style="color:royalblue">Lustre</span>, <span style="color:royalblue">ReactiveC</span>, Scade, ...
             <hr>
             <p align="left">Several notions: </p>
             <ul>
@@ -202,7 +202,7 @@ function initElement()
 
             <p align="left">
               <a style="color:tomato">Objective</a>:
-              a useful language for OCaml Web programmers
+              a useful language for Web programmers
             </p>
             <hr>
             <p align="left">
@@ -511,13 +511,32 @@ let%sync reactive_player =
 </section>
 
 <section>
+    <h2>Conclusion</h2>
+
+    <ul>
+      <li>Current work<ul>
+            <li>Pendulum: compilation, scheduling</li>
+            <li>Runtime execution in Web context</li>
+            <li>Code examples, demonstrations</li>
+          </ul>
+      </li>
+      <li>Seminars and papers<ul>
+            <li>UCF seminars at Inria Sophia</li>
+            <li>Paper on Pendulum at JFLA 2016 (St Malo, Jan 30th)</li>
+            <li>OCaml users meetup in Paris (Feb 16th)</li>
+          </ul>
+      </li>
+    </ul>
+</section>
+
+<section>
     <h2>Futur work 1</h2>
     <h3>Enhancement of the prototype</h3>
 
     <ul>
       <li>Extend the core language<ul>
           <li><span style="color:royalblue">ouput signals</span>: what is an output if an input is an event</li>
-          <li><span style="color:royalblue">parallel dynamicity</span>: add parallel tasks during execution ? with a constraint ?</li>
+          <li><span style="color:royalblue">parallel dynamicity</span>: add parallel tasks during <br/> execution ? with a constraint ?</li>
         </ul>
       </li>
 
@@ -532,12 +551,14 @@ let%sync reactive_player =
 <section>
     <h2>Futur work 2</h2>
     <h3>Semantic</h3>
+
+    For a better causality analysis...
+    
     <ol>
       <li>Common program examples with causality cycle</li>
       <li><span style="color:royalblue">Constructive semantic</span> for Pendulum</li>
-      <li><span style="color:royalblue">Implement it !</span></li>
       <li>The <span style="color:royalblue"><code>run</code></span> statement</li>
-      <li>How does it affect <span style="color:royalblue">causality cycles inherent to JavaScript</span> (event triggering himeself)</li>
+      <li>How does it help to fix <span style="color:royalblue">causality cycles inherent to JavaScript</span> (event triggering himself)</li>
     </ol>
 </section>
 
@@ -545,8 +566,8 @@ let%sync reactive_player =
     <h2>Futur work 3</h2>
     <h3>Demo and integration</h3>
     <ul>
-      <li>Use Pendulum inside Eliom</li>
-      <li>Write an example in a bigger project (UCF)</li>
+      <li>into a bigger project (UCF): MOOC web application</li>
+      <li>into Eliom</li>
     </ul>
 
     <hr>
@@ -556,15 +577,9 @@ let%sync reactive_player =
 </section>
 
 <section>
-    <h2>Conclusion</h2>
+    <h2>For the next 18 months...</h2>
     <div>
       <ul>
-        <li>Current Work:<ul>
-            <li>Pendulum: compilation, scheduling</li>
-            <li>Runtime execution in Web context</li>
-            <li>code examples, demonstrations</li>
-          </ul>
-        </li>
         <li>Futur works: <ul>
             <li>theoric parts (~5 months)</li>
             <li>experimental parts (~7 months)</li>
