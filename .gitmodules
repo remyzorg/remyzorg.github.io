@@ -1,3 +1,3 @@
 [submodule "apps/todomvc-perf-comparison"]
 	path = apps/todomvc-perf-comparison
-	url = git@github.com:remyzorg/todomvc-perf-comparison.git
+	url = https://github.com/remyzorg/todomvc-perf-comparison
