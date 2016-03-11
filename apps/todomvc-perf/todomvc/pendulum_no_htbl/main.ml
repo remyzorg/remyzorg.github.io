@@ -62,7 +62,7 @@ module Storage = struct
       (fun () -> failwith "Storage is not supported by this browser")
       (fun v -> v)
 
-  let key = string "pendulum-jsoo-todo-state"
+  let key = string "pendulum-nohash-jsoo-todo-state"
 
   let clean_all () = storage##removeItem key
 
@@ -84,9 +84,9 @@ module Model = struct
 
   type item = {
     mutable txt : string;
-    mutable item_li : divElement Js.t;
-    mutable edit : inputElement Js.t;
-    mutable lbl : labelElement Js.t;
+    (* mutable item_li : divElement Js.t; *)
+    (* mutable edit : inputElement Js.t; *)
+    (* mutable lbl : labelElement Js.t; *)
     mutable selected : bool;
   }
 
@@ -95,6 +95,15 @@ module Model = struct
     value : item;
     next : doubly_linked
   }
+
+  let get_item_li id = Format.sprintf "it-%d" id
+  let get_item_edit id = Format.sprintf "it-edit-%d" id
+  let get_item_lbl id = Format.sprintf "it-lbl-%d" id
+
+  let get_li id : divElement Js.t = get_item_li id @> CoerceTo.div
+  let get_edit id : inputElement Js.t = get_item_edit id @> CoerceTo.input
+  let get_lbl id : labelElement Js.t = get_item_lbl id @> CoerceTo.label
+
 
   let rec item_to_json k buf { txt; selected } =
     ((let open! Ppx_deriving_runtime in
@@ -111,9 +120,9 @@ module Model = struct
   let add_item_default =
     Dom_html.({
         txt = "";
-        item_li = createDiv document;
-        edit = createInput document;
-        lbl = createLabel document;
+        (* item_li = createDiv document; *)
+        (* edit = createInput document; *)
+        (* lbl = createLabel document; *)
         selected = false;
       })
 
@@ -160,9 +169,6 @@ module View = struct
     | Some false -> if state then "none" else "block"
     | Some true -> if state then "block" else "none"
 
-  let get_item_li id = Format.sprintf "it-%d" id
-  let get_item_edit id = Format.sprintf "it-edit-%d" id
-
 
   let create_item
       animate delete_sig blur_sig dblclick_sig
@@ -203,8 +209,11 @@ module View = struct
     let item_li = To_dom.of_li @@ li [mdiv; input_edit_item] in
     item_li##.className := Js.string (if selected then "completed" else "");
     item_li##.style##.display := Js.string @@ style_of_visibility false visibility;
-    To_dom.({txt; item_li; edit = of_input input_edit_item;
-                            lbl = of_label lbl_content; selected})
+    To_dom.({txt;
+             (* item_li; *)
+             (* edit = of_input input_edit_item; *)
+             (* lbl = of_label lbl_content; *)
+             selected})
 
   let create_items
       cnt tasks animate items_ul
@@ -217,7 +226,8 @@ module View = struct
         let cnt = cnt.value + acc + 1 in
         let it = create_item animate delete_sig blur_sig dblclick_sig
             keydown_sig select_sig None cnt str selected
-        in Hashtbl.add tasks cnt it; Dom.appendChild items_ul it.item_li;
+        in Hashtbl.add tasks cnt it;
+        Dom.appendChild items_ul @@ Model.get_li cnt;
         acc + 1
       ) 0 strs
     in
@@ -236,40 +246,40 @@ module View = struct
         try
           let it = Hashtbl.find h id in
           Hashtbl.remove h id;
-          Dom.removeChild items_ul it.item_li;
+          Dom.removeChild items_ul @@ Model.get_li id;
           acc + if it.selected then 0 else 1
         with Not_found -> acc
       ) 0 ids
 
   let add_append h items_ul cnt it =
     Hashtbl.add h cnt it;
-    Dom.appendChild items_ul it.item_li
+    Dom.appendChild items_ul @@ Model.get_li cnt
 
   let edited_item h id =
     try
       let it = Hashtbl.find h id in
-      if it.edit##.value##.length = 0 then begin
-        Js.Opt.iter it.item_li##.parentNode (fun p -> Dom.removeChild p it.item_li);
+      if (Model.get_edit id)##.value##.length = 0 then begin
+        Js.Opt.iter (Model.get_li id)##.parentNode (fun p -> Dom.removeChild p @@ Model.get_li id);
         Hashtbl.remove h id
       end else begin
-        it.lbl##.textContent := Js.some it.edit##.value;
-        it.item_li##.className := Js.string (if it.selected then "completed" else "");
-        it.txt <- Js.to_string it.edit##.value;
+        (Model.get_lbl id)##.textContent := Js.some (Model.get_edit id)##.value;
+        (Model.get_li id)##.className := Js.string (if it.selected then "completed" else "");
+        it.txt <- Js.to_string (Model.get_edit id)##.value;
       end
     with Not_found -> ()
 
   let focus_iedit h id =
     try
-      let it = Hashtbl.find h id in
-      it.item_li##.className := Js.string "editing";
-      it.edit##focus
+      (* let it = Hashtbl.find h id in *)
+      (Model.get_li id)##.className := Js.string "editing";
+      (Model.get_edit id)##focus
     with Not_found -> ()
 
   let select_items h ids =
     List.fold_left (fun acc id ->
         try
           let it = Hashtbl.find h id in
-          it.item_li##.className := Js.string (if it.selected then "" else "completed");
+          (Model.get_li id)##.className := Js.string (if it.selected then "" else "completed");
           it.selected <- not it.selected;
           if not it.selected then acc + 1 else acc -1;
         with Not_found -> acc
@@ -294,19 +304,19 @@ module View = struct
   let clear_complete items_ul h =
     Hashtbl.iter (fun k it ->
         if it.selected then begin
-          Dom.removeChild items_ul it.item_li;
+          Dom.removeChild items_ul (Model.get_li k);
           Hashtbl.remove h k
         end) h
 
   let select_all cnt_left h =
     let selected = cnt_left > 0 in
-    Hashtbl.iter (fun k it ->
+    Hashtbl.iter (fun id it ->
         it.selected <- selected;
-        let toggler = Dom.Opt.mapopt (Dom.firstChildOpt (Dom.firstChild it.item_li))
+        let toggler = Dom.Opt.mapopt (Dom.firstChildOpt (Dom.firstChild (Model.get_li id)))
             CoerceTo.element @>> CoerceTo.input
         in
         toggler##.checked := Js.bool selected;
-        it.item_li##.className := Js.string @@ if selected then "completed" else ""
+        (Model.get_li id)##.className := Js.string @@ if selected then "completed" else ""
       ) h;
     if cnt_left = 0 then Hashtbl.length h else 0
 
@@ -322,8 +332,8 @@ module View = struct
     | Some true -> set ("", "selected", "")
     | Some false -> set ("", "", "selected")
     end;
-    Hashtbl.iter (fun _ it ->
-        it.item_li##.style##.display := Js.string @@ style_of_visibility it.selected v
+    Hashtbl.iter (fun id it ->
+        (Model.get_li id)##.style##.display := Js.string @@ style_of_visibility it.selected v
       ) h
 
 end
