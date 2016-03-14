@@ -293,6 +293,8 @@ Suites.push({
             var deleteButtons = contentDocument.querySelectorAll('.destroy');
             for (var i = 0; i < deleteButtons.length; i++)
                 deleteButtons[i].click();
+        }),
+        new BenchmarkTestStep('DeletingAllItems', function (newTodo, contentWindow, contentDocument) {
         })
     ]
 });
