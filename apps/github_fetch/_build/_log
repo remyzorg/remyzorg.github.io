@@ -1,0 +1,8 @@
+### Starting build.
+# Target: main.ml.depends, tags: { package(cohttp.js), package(js_of_ocaml), package(js_of_ocaml.ppx), package(js_of_ocaml.tyxml), package(pendulum), package(re), package(yojson), extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -package yojson -package cohttp.js -package js_of_ocaml.tyxml -package js_of_ocaml -package re -package pendulum -package js_of_ocaml.ppx -modules main.ml > main.ml.depends
+# Target: main.cmo, tags: { package(cohttp.js), package(js_of_ocaml), package(js_of_ocaml.ppx), package(js_of_ocaml.tyxml), package(pendulum), package(re), package(yojson), byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -ppx ppx_pendulum -package yojson -package cohttp.js -package js_of_ocaml.tyxml -package js_of_ocaml -package re -package pendulum -package js_of_ocaml.ppx -o main.cmo main.ml
+# Target: main.byte, tags: { package(cohttp.js), package(js_of_ocaml), package(js_of_ocaml.ppx), package(js_of_ocaml.tyxml), package(pendulum), package(re), package(yojson), byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
+ocamlfind ocamlc -linkpkg -package yojson -package cohttp.js -package js_of_ocaml.tyxml -package js_of_ocaml -package re -package pendulum -package js_of_ocaml.ppx main.cmo -o main.byte # cached
+# Compilation successful.
