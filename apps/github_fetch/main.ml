@@ -144,7 +144,8 @@ let insert_dom animate req repolist =
   in
   let open Github_api in
   match req.Pendulum.Signal.value with
-  | Undefined -> replace_div (div [])
+  | Undefined -> ()
+                   (* replace_div (div []) *)
   | Content (fr, s) ->
     replace_div @@
     div [pre [code ~a:[a_class ["OCaml"]] [pcdata s]]];
