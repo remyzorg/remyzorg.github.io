@@ -148,7 +148,12 @@ let insert_dom animate req repolist =
                    (* replace_div (div []) *)
   | Content (fr, s) ->
     replace_div @@
-    div [pre [code ~a:[a_class ["OCaml"]] [pcdata s]]];
+    div [pre [
+        code ~a:[
+          a_class ["OCaml"];
+          a_style "maxlength=4"
+        ] [pcdata s]
+      ]];
     let hljs = (Js.Unsafe.js_expr "hljs") in
     let () = hljs##highlightBlock repolist in ()
   | File f -> get_file animate req f; replace_div (div [])
