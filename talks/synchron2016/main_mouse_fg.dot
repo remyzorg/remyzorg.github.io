@@ -1,0 +1,27 @@
+digraph flowgraph {
+  N1 [shape=box,  label=<test <B>finished ?</B>  >]; 
+  N2 [shape=box,  label=<test <B>6 ?</B>  >]; 
+  N3 [shape=oval, fontcolor=darkgreen, label=<enter 6>]; 
+  N4 [shape=oval, fontcolor=darkgreen, label=<enter 5>]; 
+  N5 [shape=oval, fontcolor=darkgreen, label=<enter 3>]; 
+  N6 [shape=box,  label=<test <B>w##onmousemove ?</B>  >]; 
+  N7 [shape=oval, fontcolor=red, label=<exit 3>]; 
+  N8 [shape=oval, fontcolor=darkgreen, label=<enter 4>]; 
+  N9 [shape = none, label=<pause>]; 
+  N8 -> N9 ;
+  N7 -> N8 ;
+  N10 [shape=oval, label=<atom>]; 
+  N10 -> N7 ;
+  N6 -> N10;
+  N6 -> N7 [style = dashed];
+  N5 -> N6 ;
+  N4 -> N5 ;
+  N3 -> N4 ;
+  N11 [shape=oval, fontcolor=red, label=<exit 4>]; 
+  N11 -> N4 ;
+  N2 -> N11;
+  N2 -> N3 [style = dashed];
+  N12 [shape = none, label=<finish>]; 
+  N1 -> N12;
+  N1 -> N2 [style = dashed];
+  }
