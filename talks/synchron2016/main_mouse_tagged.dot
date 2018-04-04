@@ -1,0 +1,14 @@
+digraph tagged {
+  N6 [label="6 loop"];
+  N6 -> N5 ;
+  N5 [label="5 seq"];
+  N5 -> N3 ;
+  N5 -> N4 [style = dashed];
+  N3 [label="3 present w##onmousemove "];
+  N3 -> N2 ;
+  N3 -> N1 [style = dashed];
+  N2 [label="2 atom"];
+  N1 [label="1 nothing"];
+  N4 [label="4 pause"];
+  }
+
